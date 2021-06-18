@@ -6,15 +6,14 @@ import com.dicoding.moviecatalog.data.remote.services.RetrofitServices
 import com.dicoding.moviecatalog.data.repository.Repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.Response
 import javax.inject.Inject
 
 class RemoteRepository @Inject constructor(private val retrofitServices: RetrofitServices) :
     Repository {
 
-    override suspend fun discover(): ResultData<Discover?> {
-        val request = withContext(Dispatchers.IO) {
-            retrofitServices.discover().discover()
-        }
+    private suspend fun remote(remote:Response<Discover>) : ResultData<Discover?>{
+        val request = withContext(Dispatchers.IO) { remote }
 
         return when(request.code()){
             200 -> ResultData(
@@ -31,24 +30,16 @@ class RemoteRepository @Inject constructor(private val retrofitServices: Retrofi
         }
     }
 
+    override suspend fun trendingMovie(): ResultData<Discover?> {
+        return remote(retrofitServices.discover().trendingMovieOfTheDay())
+    }
+
     override suspend fun popularMovie(): ResultData<Discover?> {
-        val request = withContext(Dispatchers.IO){
-            retrofitServices.discover().trandingMovieOfTheDay()
-        }
+        return remote(retrofitServices.discover().popularMovie())
+    }
 
-        return when(request.code()){
-            200 -> ResultData(
-                true,
-                null,
-                request.body()
-            )
-
-            else -> ResultData(
-                false,
-                request.body()?.status_message,
-                null
-            )
-        }
+    override suspend fun topRateTvShow(): ResultData<Discover?> {
+        return remote(retrofitServices.discover().topRateTvShow())
     }
 
 }

@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph.xml"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/appbar_home">
 
     <fragment
-        android:id="@+id/homeFragment"
+        android:id="@+id/appbar_home"
         android:name="com.dicoding.moviecatalog.ui.home.HomeFragment"
         android:label="home_fragment"
         tools:layout="@layout/home_fragment" />

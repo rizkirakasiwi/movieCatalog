@@ -1,16 +1,14 @@
 package com.dicoding.moviecatalog.ui.home
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.dicoding.moviecatalog.BuildConfig
 import com.dicoding.moviecatalog.data.Result
 import com.dicoding.moviecatalog.databinding.HomeBannerLayoutBinding
-import kotlinx.coroutines.*
+import com.dicoding.moviecatalog.util.load
+import kotlinx.coroutines.DelicateCoroutinesApi
 
 class BannerAdapter:ListAdapter<Result, BannerViewHolder>(BannerDiffUtil()){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BannerViewHolder {
@@ -29,16 +27,7 @@ class BannerViewHolder(private val view:HomeBannerLayoutBinding):RecyclerView.Vi
 
     @DelicateCoroutinesApi
     fun bind(data:Result){
-        val imageUrl = BuildConfig.imageUrl
-        val path = data.poster_path.removePrefix("/")
-        GlobalScope.launch(Dispatchers.Main){
-            val load = withContext(Dispatchers.IO){
-                Glide.with(itemView).load(imageUrl+path)
-            }
-
-            load.into(view.backdropImage)
-        }
-
+        view.backdropImage.load(data.poster_path)
         view.titleText.text = data.title
         val rating : Float = data.vote_average.toFloat() / 2f
         view.ratingImage.rating = rating

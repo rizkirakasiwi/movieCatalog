@@ -1,18 +1,16 @@
 package com.dicoding.moviecatalog
 
-import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.idling.CountingIdlingResource
 
 object EspressoIdlingResource {
-    private val RESOURCE: String? = "GLOBAL"
-    private val espressoTestIdlingResource = CountingIdlingResource(RESOURCE)
+    private const val RESOURCE = "GLOBAL"
+    val idlingResource = CountingIdlingResource(RESOURCE)
+
     fun increment() {
-        espressoTestIdlingResource.increment()
+        idlingResource.increment()
     }
+
     fun decrement() {
-        espressoTestIdlingResource.decrement()
-    }
-    fun getEspressoIdlingResource(): IdlingResource {
-        return espressoTestIdlingResource
+        idlingResource.decrement()
     }
 }

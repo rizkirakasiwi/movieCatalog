@@ -7,11 +7,9 @@ import com.dicoding.moviecatalog.data.repository.Repository
 import com.dicoding.moviecatalog.observeOnce
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertNotNull
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.ObsoleteCoroutinesApi
-import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.*
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
@@ -52,9 +50,10 @@ class HomeViewModelTest{
     }
 
     @Test
-    fun getDiscover(){
-        viewModel.getDiscover()
-        viewModel.discover.observeOnce {
+    fun getDiscover() = runBlockingTest{
+        viewModel.getPopularMovie()
+
+        viewModel.popularMovie.observeOnce {
             assertNotNull(it)
             assertEquals(true, it?.total_pages!! > 0)
             assertEquals(true, it.total_results!! > 0)
@@ -63,13 +62,15 @@ class HomeViewModelTest{
     }
 
     @Test
-    fun getPopularMovie(){
-        viewModel.getPopularMovie()
-        viewModel.popularMovie.observeOnce {
-            assertNotNull(it)
-            assertEquals(true, it?.total_pages!! > 0)
-            assertEquals(true, it.total_results!! > 0)
-            assertEquals(true, it.results.isNotEmpty())
+    fun getPopularMovie() = runBlockingTest{
+            viewModel.getTrendingMovie()
+
+            viewModel.trendingMovie.observeOnce {
+                assertNotNull(it)
+                assertEquals(true, it?.total_pages!! > 0)
+                assertEquals(true, it.total_results!! > 0)
+                assertEquals(true, it.results.isNotEmpty())
+            }
         }
-    }
+
 }

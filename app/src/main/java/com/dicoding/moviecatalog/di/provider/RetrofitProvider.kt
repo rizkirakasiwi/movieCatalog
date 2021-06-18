@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit
 @Module
 @InstallIn(SingletonComponent::class)
 object RetrofitProvider{
-    private val baseUrl = BuildConfig.BaseUrl
+    private const val baseUrl = BuildConfig.BaseUrl
 
     private val interceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BASIC
