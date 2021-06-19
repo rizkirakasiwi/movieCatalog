@@ -2,12 +2,14 @@ package com.dicoding.moviecatalog.ui.home
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.dicoding.moviecatalog.MainCoroutineRule
 import com.dicoding.moviecatalog.data.Discover
 import com.dicoding.moviecatalog.data.repository.Repository
 import com.dicoding.moviecatalog.observeOnce
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertNotNull
 import kotlinx.coroutines.*
+import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.setMain
@@ -26,31 +28,22 @@ class HomeViewModelTest{
 
     private lateinit var viewModel : HomeViewModel
 
-    private val mainThreadSurrogate = newSingleThreadContext("UI thread")
-
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    @get:Rule
+    var mainCoroutineRule = MainCoroutineRule()
 
     @Mock
     private lateinit var repository: Repository
 
-    @Mock
-    private lateinit var observer: Observer<Discover?>
-
     @Before
     fun setUp(){
         viewModel = HomeViewModel(repository)
-        Dispatchers.setMain(mainThreadSurrogate)
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain() // reset main dispatcher to the original Main dispatcher
-        mainThreadSurrogate.close()
     }
 
     @Test
-    fun getDiscover() = runBlockingTest{
+    fun getDiscover() = mainCoroutineRule.runBlockingTest{
         viewModel.getPopularMovie()
 
         viewModel.popularMovie.observeOnce {
@@ -62,7 +55,7 @@ class HomeViewModelTest{
     }
 
     @Test
-    fun getPopularMovie() = runBlockingTest{
+    fun getPopularMovie() = mainCoroutineRule.runBlockingTest {
             viewModel.getTrendingMovie()
 
             viewModel.trendingMovie.observeOnce {
@@ -71,6 +64,7 @@ class HomeViewModelTest{
                 assertEquals(true, it.total_results!! > 0)
                 assertEquals(true, it.results.isNotEmpty())
             }
-        }
+
+    }
 
 }
