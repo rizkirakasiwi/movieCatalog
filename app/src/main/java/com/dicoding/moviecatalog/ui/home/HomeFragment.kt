@@ -1,17 +1,14 @@
 package com.dicoding.moviecatalog.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.dicoding.moviecatalog.EspressoIdlingResource
-import com.dicoding.moviecatalog.R
-import com.dicoding.moviecatalog.data.CategoryAdapterData
-import com.dicoding.moviecatalog.data.CategoryItemAdapterData
 import com.dicoding.moviecatalog.databinding.HomeFragmentBinding
-import com.xwray.groupie.GroupieAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +25,7 @@ class HomeFragment : Fragment() {
 
     private val viewModel: HomeViewModel by viewModels()
     private lateinit var binding : HomeFragmentBinding
-    private val groupieAdapter = GroupieAdapter()
+    private lateinit var adapter : HomeItemAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,36 +38,27 @@ class HomeFragment : Fragment() {
     @DelicateCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        adapter = HomeItemAdapter()
         EspressoIdlingResource.increment()
         val job = GlobalScope.launch(Dispatchers.Main){
-            viewModel.getTrendingMovie()
-            viewModel.getPopularMovie()
+            viewModel.addDiscover()
+            viewModel.trendingMovie()
         }
 
         job.invokeOnCompletion {
             EspressoIdlingResource.decrement()
         }
 
-    }
-
-    override fun onResume() {
-        super.onResume()
         setTrendingMovie()
-        setPopularMovie()
-
         getAdapter()
     }
 
-    private fun getAdapter(){
-        viewModel.adapterGroup.observe(viewLifecycleOwner, {
-            groupieAdapter.addAll(it)
-            binding.rvHome.adapter = groupieAdapter
-        })
-    }
 
-    private fun setPopularMovie(){
-        viewModel.popularMovie.observe(viewLifecycleOwner, {
-           viewModel.addAdapter(HomeItemAdapter(getString(R.string.popular_movie), it))
+    private fun getAdapter(){
+        viewModel.discover.observe(viewLifecycleOwner, {
+            Log.i("HomeFragment", it.size.toString())
+            adapter.submitList(it)
+            binding.rvHome.adapter = adapter
         })
     }
 

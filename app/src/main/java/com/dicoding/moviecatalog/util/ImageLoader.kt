@@ -9,7 +9,7 @@ import com.dicoding.moviecatalog.R
 import kotlinx.coroutines.*
 
 @DelicateCoroutinesApi
-fun ImageView.load(url:String){
+fun ImageView.load(url:String?){
     val imageUrl = BuildConfig.imagePoster
     Log.i("ImageLoader", "Load image from $imageUrl$url")
     GlobalScope.launch(Dispatchers.Main){

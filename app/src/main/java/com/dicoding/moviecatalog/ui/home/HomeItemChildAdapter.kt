@@ -3,9 +3,12 @@ package com.dicoding.moviecatalog.ui.home
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.dicoding.moviecatalog.R
 import com.dicoding.moviecatalog.data.Result
 import com.dicoding.moviecatalog.databinding.RvMovieLayoutBinding
 import com.dicoding.moviecatalog.util.load
@@ -21,6 +24,10 @@ class HomeItemChildAdapter :ListAdapter<Result, HomeItemChildViewHolder>(HomeIte
     @DelicateCoroutinesApi
     override fun onBindViewHolder(holder: HomeItemChildViewHolder, position: Int) {
         holder.bind(getItem(position).poster_path)
+        holder.itemView.setOnClickListener {
+            val bundle = bundleOf("data" to getItem(position))
+            holder.itemView.findNavController().navigate(R.id.action_appbar_home_to_detailFragment, bundle)
+        }
     }
 }
 

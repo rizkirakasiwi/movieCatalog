@@ -2,9 +2,12 @@ package com.dicoding.moviecatalog.ui.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.dicoding.moviecatalog.R
 import com.dicoding.moviecatalog.data.Result
 import com.dicoding.moviecatalog.databinding.HomeBannerLayoutBinding
 import com.dicoding.moviecatalog.util.load
@@ -20,6 +23,11 @@ class BannerAdapter:ListAdapter<Result, BannerViewHolder>(BannerDiffUtil()){
     @DelicateCoroutinesApi
     override fun onBindViewHolder(holder: BannerViewHolder, position: Int) {
         holder.bind(getItem(position))
+
+        holder.itemView.setOnClickListener {
+            val bundle = bundleOf("data" to getItem(position))
+            holder.itemView.findNavController().navigate(R.id.action_appbar_home_to_detailFragment, bundle)
+        }
     }
 
 }

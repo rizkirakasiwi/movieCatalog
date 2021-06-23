@@ -7,7 +7,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface DiscoverDao {
-    @GET("movie/popular")
+    @GET("movie/top_rated")
     suspend fun popularMovie(@Query("api_key") apiKey: String = BuildConfig.ApiKey) : Response<Discover>
 
     @GET("trending/movie/day")
@@ -17,4 +17,11 @@ interface DiscoverDao {
 
     @GET("tv/top_rated")
     suspend fun topRateTvShow(@Query("api_key") apiKey: String = BuildConfig.ApiKey):Response<Discover>
+
+    @GET("discover/movie")
+    suspend fun latestMovie(@Query("api_key") apiKey: String = BuildConfig.ApiKey):Response<Discover>
+
+    @GET("discover/tv")
+    suspend fun latestTvShow(@Query("api_key") apiKey: String = BuildConfig.ApiKey):Response<Discover>
+
 }

@@ -1,28 +1,44 @@
 package com.dicoding.moviecatalog.ui.home
 
-import android.util.Log
-import android.view.View
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.dicoding.moviecatalog.R
 import com.dicoding.moviecatalog.data.Discover
 import com.dicoding.moviecatalog.databinding.RvHomeLayoutBinding
-import com.xwray.groupie.viewbinding.BindableItem
 
-class HomeItemAdapter(private val title:String, private val data:Discover?):BindableItem<RvHomeLayoutBinding>() {
-    override fun bind(viewBinding: RvHomeLayoutBinding, position: Int) {
-        Log.i("HomeItemAdapter", "You see me")
-        val popularMovieAdapter = HomeItemChildAdapter()
-
-        popularMovieAdapter.submitList(data?.results)
-        viewBinding.titleText.text = title
-        viewBinding.rvHomeLayout.adapter = popularMovieAdapter
+class HomeItemAdapter:ListAdapter<Discover, HomeItemViewHolder>(HomeItemDiffUtil()){
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeItemViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val view = RvHomeLayoutBinding.inflate(inflater, parent, false)
+        return HomeItemViewHolder(view)
     }
 
-    override fun getLayout(): Int {
-        return R.layout.rv_home_layout
+    override fun onBindViewHolder(holder: HomeItemViewHolder, position: Int) {
+        getItem(0).category = holder.itemView.context.getString(R.string.popular_movie)
+        getItem(1).category = holder.itemView.context.getString(R.string.top_rate_tvshow)
+        getItem(2).category = holder.itemView.context.getString(R.string.latest_movie)
+        getItem(3).category = holder.itemView.context.getString(R.string.latest_tvshow)
+        holder.bind(getItem(position))
     }
 
-    override fun initializeViewBinding(view: View): RvHomeLayoutBinding {
-        return RvHomeLayoutBinding.bind(view)
+}
+class HomeItemViewHolder(private val binding : RvHomeLayoutBinding):RecyclerView.ViewHolder(binding.root){
+    fun bind(discover: Discover){
+        binding.titleText.text = discover.category
+        val adapter = HomeItemChildAdapter()
+        adapter.submitList(discover.results)
+        binding.rvHomeLitem.adapter = adapter
+    }
+}
+class HomeItemDiffUtil:DiffUtil.ItemCallback<Discover>() {
+    override fun areItemsTheSame(oldItem: Discover, newItem: Discover): Boolean {
+        return oldItem.category == newItem.category
     }
 
+    override fun areContentsTheSame(oldItem: Discover, newItem: Discover): Boolean {
+        return oldItem == newItem
+    }
 }

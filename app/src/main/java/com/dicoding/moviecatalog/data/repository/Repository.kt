@@ -7,4 +7,6 @@ interface Repository{
     suspend fun trendingMovie():ResultData<Discover?>
     suspend fun popularMovie():ResultData<Discover?>
     suspend fun topRateTvShow():ResultData<Discover?>
+    suspend fun latestMovie():ResultData<Discover?>
+    suspend fun latestTvShow():ResultData<Discover?>
 }
