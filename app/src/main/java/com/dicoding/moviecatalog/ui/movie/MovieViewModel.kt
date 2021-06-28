@@ -1,4 +1,4 @@
-package com.dicoding.moviecatalog.ui.home
+package com.dicoding.moviecatalog.ui.movie
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,9 +9,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
-    private val repository: Repository,
-): ViewModel() {
+class MovieViewModel @Inject constructor(
+    val repository: Repository
+) : ViewModel() {
     private val _popularMovie = MutableLiveData<Discover?>()
     val popularMovie : LiveData<Discover?> get() = _popularMovie
 
@@ -29,18 +29,13 @@ class HomeViewModel @Inject constructor(
         val listDiscover = mutableListOf<Discover?>()
 
         val popularMovie = repository.popularMovie().data
-        val topRateTv = repository.topRateTvShow().data
         val latestMovie = repository.latestMovie().data
-        val latestTv = repository.latestTvShow().data
 
-        if (listDiscover.count() < 3) {
+        if (listDiscover.count() < 1) {
             listDiscover.add(popularMovie)
-            listDiscover.add(topRateTv)
             listDiscover.add(latestMovie)
-            listDiscover.add(latestTv)
         }
 
         _discover.value = listDiscover
     }
-
 }

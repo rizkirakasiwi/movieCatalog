@@ -1,4 +1,4 @@
-package com.dicoding.moviecatalog.ui.home
+package com.dicoding.moviecatalog.ui.movie
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.dicoding.moviecatalog.MainCoroutineRule
@@ -6,23 +6,20 @@ import com.dicoding.moviecatalog.data.dummy.DiscoverDummy
 import com.dicoding.moviecatalog.data.repository.Repository
 import com.dicoding.moviecatalog.observeOnce
 import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
+import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.verify
+import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 
-
 @RunWith(MockitoJUnitRunner::class)
-class HomeViewModelTest {
-
-    private lateinit var viewModel: HomeViewModel
+class MovieViewModelTest {
+    private lateinit var viewModel: MovieViewModel
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
@@ -36,15 +33,15 @@ class HomeViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = HomeViewModel(repository)
+        viewModel = MovieViewModel(repository)
     }
 
     @ExperimentalCoroutinesApi
     @Test
     fun trendingMovie() = mainCoroutineRule.runBlockingTest {
-        `when`(repository.trendingMovie()).thenReturn(DiscoverDummy.getDiscover())
+        Mockito.`when`(repository.trendingMovie()).thenReturn(DiscoverDummy.getDiscover())
         val trending = viewModel.trendingMovie()
-        verify(repository).trendingMovie()
+        Mockito.verify(repository).trendingMovie()
         assertNotNull(trending)
 
         viewModel.popularMovie.observeOnce {
@@ -58,20 +55,15 @@ class HomeViewModelTest {
     @ExperimentalCoroutinesApi
     @Test
     fun addDiscover() = mainCoroutineRule.runBlockingTest {
-        `when`(repository.popularMovie()).thenReturn(DiscoverDummy.getDiscover())
-        `when`(repository.topRateTvShow()).thenReturn(DiscoverDummy.getDiscover())
-        `when`(repository.latestTvShow()).thenReturn(DiscoverDummy.getDiscover())
-        `when`(repository.latestMovie()).thenReturn(DiscoverDummy.getDiscover())
+        Mockito.`when`(repository.popularMovie()).thenReturn(DiscoverDummy.getDiscover())
+        Mockito.`when`(repository.latestMovie()).thenReturn(DiscoverDummy.getDiscover())
         val discover = viewModel.addDiscover()
-        verify(repository).popularMovie()
-        verify(repository).topRateTvShow()
-        verify(repository).latestTvShow()
-        verify(repository).latestMovie()
+        Mockito.verify(repository).popularMovie()
+        Mockito.verify(repository).latestMovie()
         assertNotNull(discover)
         viewModel.discover.observeOnce {
             assertEquals(true, it.isNotEmpty())
-            assertEquals(true, it.size == 4)
+            assertEquals(true, it.size == 2)
         }
     }
-
 }

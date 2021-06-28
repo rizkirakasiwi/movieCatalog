@@ -50,4 +50,8 @@ class RemoteRepository @Inject constructor(private val retrofitServices: Retrofi
         return remote(retrofitServices.discover().latestTvShow())
     }
 
+    override suspend fun tvPopular(): ResultData<Discover?> {
+        return remote(retrofitServices.discover().tvPopular())
+    }
+
 }

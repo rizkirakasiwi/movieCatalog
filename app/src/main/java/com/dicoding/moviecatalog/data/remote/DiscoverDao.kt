@@ -15,6 +15,9 @@ interface DiscoverDao {
         @Query("api_key") apiKey: String = BuildConfig.ApiKey
     ): Response<Discover>
 
+    @GET("tv/popular")
+    suspend fun tvPopular(@Query("api_key") apiKey: String = BuildConfig.ApiKey):Response<Discover>
+
     @GET("tv/top_rated")
     suspend fun topRateTvShow(@Query("api_key") apiKey: String = BuildConfig.ApiKey):Response<Discover>
 

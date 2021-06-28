@@ -35,8 +35,8 @@ class BannerViewHolder(private val view:HomeBannerLayoutBinding):RecyclerView.Vi
 
     @DelicateCoroutinesApi
     fun bind(data:Result){
-        view.backdropImage.load(data.poster_path)
-        view.titleText.text = data.title
+        view.backdropImage.load(data.backdrop_path)
+        view.titleText.text = data.title ?: data.name
         val rating : Float = data.vote_average.toFloat() / 2f
         view.ratingImage.rating = rating
         view.textRating.text = data.vote_average.toString()

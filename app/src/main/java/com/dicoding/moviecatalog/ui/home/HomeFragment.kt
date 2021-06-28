@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.dicoding.moviecatalog.EspressoIdlingResource
+import com.dicoding.moviecatalog.R
 import com.dicoding.moviecatalog.databinding.HomeFragmentBinding
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +25,6 @@ class HomeFragment : Fragment() {
         private const val TAG = "HomeFragment"
     }
 
-    private val viewModel: HomeViewModel by viewModels()
     private lateinit var binding : HomeFragmentBinding
     private lateinit var adapter : HomeItemAdapter
 
@@ -38,42 +39,15 @@ class HomeFragment : Fragment() {
     @DelicateCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = HomeItemAdapter()
-        EspressoIdlingResource.increment()
-        val job = GlobalScope.launch(Dispatchers.Main){
-            viewModel.addDiscover()
-            viewModel.trendingMovie()
-        }
-
-        job.invokeOnCompletion {
-            EspressoIdlingResource.decrement()
-        }
-
-        setTrendingMovie()
-        getAdapter()
+        binding.viewpagerHome.isUserInputEnabled = false
+        val tabText = listOf(getString(R.string.movie), getString(R.string.tv_show))
+        binding.viewpagerHome.adapter = HomeViewPagerAdapter(this)
+        TabLayoutMediator(binding.tabHome, binding.viewpagerHome){tab, position ->
+            tab.text = tabText[position]
+        }.attach()
     }
 
 
-    private fun getAdapter(){
-        viewModel.discover.observe(viewLifecycleOwner, {
-            Log.i("HomeFragment", it.size.toString())
-            adapter.submitList(it)
-            binding.rvHome.adapter = adapter
-        })
-    }
-
-    private fun setTrendingMovie(){
-        val adapter = BannerAdapter()
-        viewModel.trendingMovie.observe(viewLifecycleOwner, {
-            if (it?.results != null) {
-                adapter.submitList(it.results.subList(0, 5))
-            }
-
-            binding.rvBannerPopular.adapter = adapter
-            binding.rvBannerPopular.setInfinite(true)
-            binding.rvBannerPopular.set3DItem(true)
-        })
-    }
 
 
 }

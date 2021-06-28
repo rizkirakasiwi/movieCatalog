@@ -17,10 +17,6 @@ class HomeItemAdapter:ListAdapter<Discover, HomeItemViewHolder>(HomeItemDiffUtil
     }
 
     override fun onBindViewHolder(holder: HomeItemViewHolder, position: Int) {
-        getItem(0).category = holder.itemView.context.getString(R.string.popular_movie)
-        getItem(1).category = holder.itemView.context.getString(R.string.top_rate_tvshow)
-        getItem(2).category = holder.itemView.context.getString(R.string.latest_movie)
-        getItem(3).category = holder.itemView.context.getString(R.string.latest_tvshow)
         holder.bind(getItem(position))
     }
 

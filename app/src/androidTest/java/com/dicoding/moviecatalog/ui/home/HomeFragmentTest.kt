@@ -53,14 +53,22 @@ class HomeFragmentTest {
     }
 
     @Test
-    fun swipeAppBar(){
+    fun swipeMovieAppBar(){
         val scenarioRule = launchActivity<MainActivity>()
         onView(withId(R.id.appbar_home)).check(matches(isDisplayed()))
         onView(withId(R.id.appbar_home)).perform(swipeUp())
     }
 
     @Test
-    fun trendingListViewTest(){
+    fun swipeTvShowAppBar(){
+        val scenarioRule = launchActivity<MainActivity>()
+        onView(withText("TV SHOW")).perform(click())
+        onView(withId(R.id.appbar_home)).check(matches(isDisplayed()))
+        onView(withId(R.id.appbar_home)).perform(swipeUp())
+    }
+
+    @Test
+    fun trendingMovieTest(){
         val scenarioRule = launchActivity<MainActivity>()
 
         onView(withId(R.id.home_fragment)).check(matches(isDisplayed()))
@@ -73,7 +81,21 @@ class HomeFragmentTest {
     }
 
     @Test
-    fun popularMovieDisplayed(){
+    fun trendingTvShowTest(){
+        val scenarioRule = launchActivity<MainActivity>()
+
+        onView(withText("TV SHOW")).perform(click())
+
+        onView(withId(R.id.home_fragment)).check(matches(isDisplayed()))
+
+        onView(allOf(withParent(withId(R.id.appbar_home)), withId(R.id.rv_banner_popular)))
+            .check(matches(isDisplayed()))
+
+        onView(allOf(withParent(withId(R.id.appbar_home)), withId(R.id.rv_banner_popular)))
+            .perform(scrollToPosition<BannerViewHolder>(4))
+    }
+    @Test
+    fun popularMovieTest(){
         val scenarioRule = launchActivity<MainActivity>()
         onView(withId(R.id.home_fragment)).check(matches(isDisplayed()))
 
@@ -90,11 +112,8 @@ class HomeFragmentTest {
                 )
             ),
         ).check(matches(isDisplayed()))
-    }
 
-    @Test
-    fun popularMovieScroller(){
-        val scenarioRule = launchActivity<MainActivity>()
+
         onView(
             allOf(
                 withId(R.id.rv_home_litem),
@@ -110,23 +129,26 @@ class HomeFragmentTest {
         ).perform(scrollToPosition<RecyclerView.ViewHolder>(10))
     }
 
+
     @Test
-    fun topRateTvShowDisplayed(){
+    fun topRateTvShowTest(){
         val scenarioRule = launchActivity<MainActivity>()
         onView(withId(R.id.home_fragment)).check(matches(isDisplayed()))
+
+        onView(withText("TV SHOW")).perform(click())
 
         Thread.sleep(2000)
 
         onView(
             withId(R.id.rv_home)
-        ).perform(scrollToPosition<RecyclerView.ViewHolder>(3))
+        ).perform(scrollToPosition<RecyclerView.ViewHolder>(1))
 
         onView(
             allOf(
                 withId(R.id.rv_home_litem),
                 isDescendantOfA(
                     allOf(
-                        withRecyclerView(R.id.rv_home).atPosition(1),
+                        withRecyclerView(R.id.rv_home).atPosition(0),
                         hasDescendant(
                             withText("Top Rate Tv Show")
                         )
@@ -134,23 +156,13 @@ class HomeFragmentTest {
                 )
             ),
         ).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun topRateTvShowScroller(){
-        val scenarioRule = launchActivity<MainActivity>()
-        Thread.sleep(2000)
-
-        onView(
-            withId(R.id.rv_home)
-        ).perform(scrollToPosition<RecyclerView.ViewHolder>(3))
 
         onView(
             allOf(
                 withId(R.id.rv_home_litem),
                 isDescendantOfA(
                     allOf(
-                        withRecyclerView(R.id.rv_home).atPosition(1),
+                        withRecyclerView(R.id.rv_home).atPosition(0),
                         hasDescendant(
                             withText("Top Rate Tv Show")
                         )
@@ -160,23 +172,25 @@ class HomeFragmentTest {
         ).perform(scrollToPosition<RecyclerView.ViewHolder>(10))
     }
 
+
     @Test
-    fun latestMovieDisplayed(){
+    fun latestMovieTest(){
         val scenarioRule = launchActivity<MainActivity>()
         onView(withId(R.id.home_fragment)).check(matches(isDisplayed()))
+        onView(withId(R.id.appbar_home)).perform(swipeUp())
 
         Thread.sleep(2000)
 
         onView(
             withId(R.id.rv_home)
-        ).perform(scrollToPosition<RecyclerView.ViewHolder>(3))
+        ).perform(scrollToPosition<RecyclerView.ViewHolder>(1))
 
         onView(
             allOf(
                 withId(R.id.rv_home_litem),
                 isDescendantOfA(
                     allOf(
-                        withRecyclerView(R.id.rv_home).atPosition(2),
+                        withRecyclerView(R.id.rv_home).atPosition(1),
                         hasDescendant(
                             withText("Latest Movie")
                         )
@@ -184,24 +198,13 @@ class HomeFragmentTest {
                 )
             ),
         ).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun latestMovieScroller(){
-        val scenarioRule = launchActivity<MainActivity>()
-
-        Thread.sleep(2000)
-
-        onView(
-            withId(R.id.rv_home)
-        ).perform(scrollToPosition<RecyclerView.ViewHolder>(3))
 
         onView(
             allOf(
                 withId(R.id.rv_home_litem),
                 isDescendantOfA(
                     allOf(
-                        withRecyclerView(R.id.rv_home).atPosition(2),
+                        withRecyclerView(R.id.rv_home).atPosition(1),
                         hasDescendant(
                             withText("Latest Movie")
                         )
@@ -211,10 +214,13 @@ class HomeFragmentTest {
         ).perform(scrollToPosition<RecyclerView.ViewHolder>(10))
     }
 
+
     @Test
-    fun latestTvShowDisplayed(){
+    fun latestTvShowTest(){
         val scenarioRule = launchActivity<MainActivity>()
         onView(withId(R.id.home_fragment)).check(matches(isDisplayed()))
+
+        onView(withText("TV SHOW")).perform(click())
 
         onView(withId(R.id.appbar_home)).perform(swipeUp())
 
@@ -222,14 +228,14 @@ class HomeFragmentTest {
 
         onView(
             withId(R.id.rv_home)
-        ).perform(scrollToPosition<RecyclerView.ViewHolder>(3))
+        ).perform(scrollToPosition<RecyclerView.ViewHolder>(1))
 
         onView(
             allOf(
                 withId(R.id.rv_home_litem),
                 isDescendantOfA(
                     allOf(
-                        withRecyclerView(R.id.rv_home).atPosition(3),
+                        withRecyclerView(R.id.rv_home).atPosition(1),
                         hasDescendant(
                             withText("Latest Tv Show")
                         )
@@ -237,26 +243,13 @@ class HomeFragmentTest {
                 )
             ),
         ).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun latestTvShowScroller(){
-        val scenarioRule = launchActivity<MainActivity>()
-
-        onView(withId(R.id.appbar_home)).perform(swipeUp())
-
-        Thread.sleep(2000)
-
-        onView(
-            withId(R.id.rv_home)
-        ).perform(scrollToPosition<RecyclerView.ViewHolder>(3))
 
         onView(
             allOf(
                 withId(R.id.rv_home_litem),
                 isDescendantOfA(
                     allOf(
-                        withRecyclerView(R.id.rv_home).atPosition(3),
+                        withRecyclerView(R.id.rv_home).atPosition(1),
                         hasDescendant(
                             withText("Latest Tv Show")
                         )
@@ -357,6 +350,8 @@ class HomeFragmentTest {
 
             val trendingMovie = repository.topRateTvShow()
 
+            onView(withText("TV SHOW")).perform(click())
+
             Thread.sleep(2000)
 
             onView(
@@ -364,7 +359,7 @@ class HomeFragmentTest {
                     withId(R.id.rv_home_litem),
                     isDescendantOfA(
                         allOf(
-                            withRecyclerView(R.id.rv_home).atPosition(1),
+                            withRecyclerView(R.id.rv_home).atPosition(0),
                             hasDescendant(
                                 withText("Top Rate Tv Show")
                             )
@@ -408,16 +403,18 @@ class HomeFragmentTest {
 
             Thread.sleep(2000)
 
+            onView(withId(R.id.appbar_home)).perform(swipeUp())
+
             onView(
                 withId(R.id.rv_home)
-            ).perform(scrollToPosition<RecyclerView.ViewHolder>(3))
+            ).perform(scrollToPosition<RecyclerView.ViewHolder>(1))
 
             onView(
                 allOf(
                     withId(R.id.rv_home_litem),
                     isDescendantOfA(
                         allOf(
-                            withRecyclerView(R.id.rv_home).atPosition(2),
+                            withRecyclerView(R.id.rv_home).atPosition(1),
                             hasDescendant(
                                 withText("Latest Movie")
                             )
@@ -461,6 +458,7 @@ class HomeFragmentTest {
             val scenarioRule = launchActivity<MainActivity>()
 
             val trendingMovie = repository.latestTvShow()
+            onView(withText("TV SHOW")).perform(click())
 
             onView(withId(R.id.appbar_home)).perform(swipeUp())
 
@@ -468,14 +466,14 @@ class HomeFragmentTest {
 
             onView(
                 withId(R.id.rv_home)
-            ).perform(scrollToPosition<RecyclerView.ViewHolder>(3))
+            ).perform(scrollToPosition<RecyclerView.ViewHolder>(1))
 
             onView(
                 allOf(
                     withId(R.id.rv_home_litem),
                     isDescendantOfA(
                         allOf(
-                            withRecyclerView(R.id.rv_home).atPosition(3),
+                            withRecyclerView(R.id.rv_home).atPosition(1),
                             hasDescendant(
                                 withText("Latest Tv Show")
                             )
