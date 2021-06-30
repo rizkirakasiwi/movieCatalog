@@ -9,4 +9,9 @@
     <string name="latest_tvshow">Latest Tv Show</string>
     <string name="image_banner">image banner</string>
     <string name="genre_year">%s, %s</string>
+    <string name="poster">Poster</string>
+    <string name="rating">Rating</string>
+    <string name="nflx">NFLX</string>
+    <string name="favorite">Favorite</string>
+    <string name="back">Back</string>
 </resources>

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.dicoding.moviecatalog.EspressoIdlingResource
 import com.dicoding.moviecatalog.R
 import com.dicoding.moviecatalog.databinding.HomeFragmentBinding
@@ -26,7 +27,6 @@ class HomeFragment : Fragment() {
     }
 
     private lateinit var binding : HomeFragmentBinding
-    private lateinit var adapter : HomeItemAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,7 +45,12 @@ class HomeFragment : Fragment() {
         TabLayoutMediator(binding.tabHome, binding.viewpagerHome){tab, position ->
             tab.text = tabText[position]
         }.attach()
+
+        binding.favButton.setOnClickListener{
+            findNavController().navigate(R.id.action_homeFragment_to_favoriteFragment)
+        }
     }
+
 
 
 

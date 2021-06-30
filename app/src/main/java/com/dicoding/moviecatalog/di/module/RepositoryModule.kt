@@ -1,7 +1,7 @@
 package com.dicoding.moviecatalog.di.module
 
-import com.dicoding.moviecatalog.data.repository.Repository
-import com.dicoding.moviecatalog.data.repository.remote.RemoteRepository
+import com.dicoding.moviecatalog.data.repository.DiscoverRepository
+import com.dicoding.moviecatalog.data.repository.remote.RemoteDiscoverRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -11,5 +11,5 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
     @Binds
-    abstract fun networkRepository(remoteRepository: RemoteRepository):Repository
+    abstract fun networkRepository(remoteRepository: RemoteDiscoverRepository): DiscoverRepository
 }

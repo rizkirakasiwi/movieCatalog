@@ -16,12 +16,14 @@ import com.dicoding.moviecatalog.EspressoIdlingResource
 import com.dicoding.moviecatalog.MainActivity
 import com.dicoding.moviecatalog.R
 import com.dicoding.moviecatalog.data.genre
-import com.dicoding.moviecatalog.data.repository.Repository
+import com.dicoding.moviecatalog.data.repository.DiscoverRepository
+import com.dicoding.moviecatalog.data.repository.FavoriteRepository
 import com.dicoding.moviecatalog.util.DateHelper
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.CoreMatchers.equalTo
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -37,7 +39,10 @@ class HomeFragmentTest {
     private lateinit var instrumentationContext: Context
 
     @Inject
-    lateinit var repository: Repository
+    lateinit var discoverRepository: DiscoverRepository
+
+    @Inject
+    lateinit var favoriteRepository: FavoriteRepository
 
 
     @Before
@@ -265,7 +270,7 @@ class HomeFragmentTest {
 
             val scenarioRule = launchActivity<MainActivity>()
 
-            val trendingMovie = repository.trendingMovie()
+            val trendingMovie = discoverRepository.trendingMovie()
 
             onView(allOf(withParent(withId(R.id.appbar_home)), withId(R.id.rv_banner_popular)))
                 .perform(actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
@@ -292,6 +297,19 @@ class HomeFragmentTest {
                 onView(withId(R.id.genre_year_text)).check(matches(isDisplayed()))
                 onView(withId(R.id.genre_year_text)).check(matches(withText(genre)))
             }
+
+            val trendingFav = trendingMovie.data?.results?.get(0)?.let { favoriteRepository.selectMovie(it.id) }
+
+            onView(withId(R.id.fav_button)).check(matches(isDisplayed()))
+            if (trendingFav.isNullOrEmpty()){
+                onView(withId(R.id.fav_button)).perform(click())
+                val favAdd = trendingMovie.data?.results?.get(0)?.let { favoriteRepository.selectMovie(it.id) }
+                assertThat(false, equalTo(favAdd.isNullOrEmpty()))
+            }else{
+                onView(withId(R.id.fav_button)).perform(click())
+                val favAdd = trendingMovie.data?.results?.get(0)?.let { favoriteRepository.selectMovie(it.id) }
+                assertThat(true, equalTo(favAdd.isNullOrEmpty()))
+            }
         }
     }
 
@@ -301,7 +319,7 @@ class HomeFragmentTest {
 
             val scenarioRule = launchActivity<MainActivity>()
 
-            val trendingMovie = repository.popularMovie()
+            val trendingMovie = discoverRepository.popularMovie()
 
             onView(
                 allOf(
@@ -339,6 +357,19 @@ class HomeFragmentTest {
                 onView(withId(R.id.genre_year_text)).check(matches(isDisplayed()))
                 onView(withId(R.id.genre_year_text)).check(matches(withText(genre)))
             }
+
+            val trendingFav = trendingMovie.data?.results?.get(0)?.let { favoriteRepository.selectMovie(it.id) }
+
+            onView(withId(R.id.fav_button)).check(matches(isDisplayed()))
+            if (trendingFav.isNullOrEmpty()){
+                onView(withId(R.id.fav_button)).perform(click())
+                val favAdd = trendingMovie.data?.results?.get(0)?.let { favoriteRepository.selectMovie(it.id) }
+                assertThat(false, equalTo(favAdd.isNullOrEmpty()))
+            }else{
+                onView(withId(R.id.fav_button)).perform(click())
+                val favAdd = trendingMovie.data?.results?.get(0)?.let { favoriteRepository.selectMovie(it.id) }
+                assertThat(true, equalTo(favAdd.isNullOrEmpty()))
+            }
         }
     }
 
@@ -348,7 +379,7 @@ class HomeFragmentTest {
 
             val scenarioRule = launchActivity<MainActivity>()
 
-            val trendingMovie = repository.topRateTvShow()
+            val trendingMovie = discoverRepository.topRateTvShow()
 
             onView(withText("TV SHOW")).perform(click())
 
@@ -390,6 +421,19 @@ class HomeFragmentTest {
                 onView(withId(R.id.genre_year_text)).check(matches(isDisplayed()))
                 onView(withId(R.id.genre_year_text)).check(matches(withText(genre)))
             }
+
+            val trendingFav = trendingMovie.data?.results?.get(0)?.let { favoriteRepository.selectTvShow(it.id) }
+
+            onView(withId(R.id.fav_button)).check(matches(isDisplayed()))
+            if (trendingFav.isNullOrEmpty()){
+                onView(withId(R.id.fav_button)).perform(click())
+                val favAdd = trendingMovie.data?.results?.get(0)?.let { favoriteRepository.selectTvShow(it.id) }
+                assertThat(false, equalTo(favAdd.isNullOrEmpty()))
+            }else{
+                onView(withId(R.id.fav_button)).perform(click())
+                val favAdd = trendingMovie.data?.results?.get(0)?.let { favoriteRepository.selectTvShow(it.id) }
+                assertThat(true, equalTo(favAdd.isNullOrEmpty()))
+            }
         }
     }
 
@@ -399,7 +443,7 @@ class HomeFragmentTest {
 
             val scenarioRule = launchActivity<MainActivity>()
 
-            val trendingMovie = repository.latestMovie()
+            val trendingMovie = discoverRepository.latestMovie()
 
             Thread.sleep(2000)
 
@@ -447,6 +491,19 @@ class HomeFragmentTest {
                 onView(withId(R.id.genre_year_text)).check(matches(isDisplayed()))
                 onView(withId(R.id.genre_year_text)).check(matches(withText(genre)))
             }
+
+            val trendingFav = trendingMovie.data?.results?.get(0)?.let { favoriteRepository.selectMovie(it.id) }
+
+            onView(withId(R.id.fav_button)).check(matches(isDisplayed()))
+            if (trendingFav.isNullOrEmpty()){
+                onView(withId(R.id.fav_button)).perform(click())
+                val favAdd = trendingMovie.data?.results?.get(0)?.let { favoriteRepository.selectMovie(it.id) }
+                assertThat(false, equalTo(favAdd.isNullOrEmpty()))
+            }else{
+                onView(withId(R.id.fav_button)).perform(click())
+                val favAdd = trendingMovie.data?.results?.get(0)?.let { favoriteRepository.selectMovie(it.id) }
+                assertThat(true, equalTo(favAdd.isNullOrEmpty()))
+            }
         }
     }
 
@@ -457,7 +514,9 @@ class HomeFragmentTest {
 
             val scenarioRule = launchActivity<MainActivity>()
 
-            val trendingMovie = repository.latestTvShow()
+            val trendingMovie = discoverRepository.latestTvShow()
+            val favTvShow = favoriteRepository.selectTvShow(trendingMovie.data?.results?.get(0)?.id!!)
+
             onView(withText("TV SHOW")).perform(click())
 
             onView(withId(R.id.appbar_home)).perform(swipeUp())
@@ -485,7 +544,6 @@ class HomeFragmentTest {
             onView(withId(R.id.detail_Fragment)).check(matches(isDisplayed()))
 
 
-
             onView(withId(R.id.title_text)).check(matches(isDisplayed()))
             onView(withId(R.id.title_text)).check(matches(withText(trendingMovie.data?.results?.get(0)?.title ?: trendingMovie.data?.results?.get(0)?.name)))
 
@@ -506,8 +564,21 @@ class HomeFragmentTest {
                 onView(withId(R.id.genre_year_text)).check(matches(isDisplayed()))
                 onView(withId(R.id.genre_year_text)).check(matches(withText(genre)))
             }
+
+            onView(withId(R.id.fav_button)).check(matches(isDisplayed()))
+            if(favTvShow.isNullOrEmpty()){
+                onView(withId(R.id.fav_button)).perform(click())
+                val fav = favoriteRepository.selectTvShow(trendingMovie.data?.results?.get(0)?.id!!)
+                assertThat(false, equalTo(fav.isNullOrEmpty()))
+            }else{
+                onView(withId(R.id.fav_button)).perform(click())
+                val fav = favoriteRepository.selectTvShow(trendingMovie.data?.results?.get(0)?.id!!)
+                assertThat(true, equalTo(fav.isNullOrEmpty()))
+            }
         }
     }
+
+
 
     private fun withRecyclerView(recyclerViewId: Int): RecyclerViewMatcher {
         return RecyclerViewMatcher(recyclerViewId)

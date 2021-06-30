@@ -3,14 +3,14 @@ package com.dicoding.moviecatalog.data.repository.remote
 import com.dicoding.moviecatalog.data.Discover
 import com.dicoding.moviecatalog.data.ResultData
 import com.dicoding.moviecatalog.data.remote.services.RetrofitServices
-import com.dicoding.moviecatalog.data.repository.Repository
+import com.dicoding.moviecatalog.data.repository.DiscoverRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 import javax.inject.Inject
 
-class RemoteRepository @Inject constructor(private val retrofitServices: RetrofitServices) :
-    Repository {
+class RemoteDiscoverRepository @Inject constructor(private val retrofitServices: RetrofitServices) :
+    DiscoverRepository {
 
     private suspend fun remote(remote:Response<Discover>) : ResultData<Discover?>{
         val request = withContext(Dispatchers.IO) { remote }

@@ -3,7 +3,7 @@ package com.dicoding.moviecatalog.ui.tvshow
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.dicoding.moviecatalog.MainCoroutineRule
 import com.dicoding.moviecatalog.data.dummy.DiscoverDummy
-import com.dicoding.moviecatalog.data.repository.Repository
+import com.dicoding.moviecatalog.data.repository.DiscoverRepository
 import com.dicoding.moviecatalog.observeOnce
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
@@ -29,19 +29,19 @@ class TvShowViewModelTest {
     var mainCoroutineRule = MainCoroutineRule()
 
     @Mock
-    private lateinit var repository: Repository
+    private lateinit var discoverRepository: DiscoverRepository
 
     @Before
     fun setUp() {
-        viewModel = TvShowViewModel(repository)
+        viewModel = TvShowViewModel(discoverRepository)
     }
 
     @ExperimentalCoroutinesApi
     @Test
     fun trendingTvShow() = mainCoroutineRule.runBlockingTest {
-        Mockito.`when`(repository.tvPopular()).thenReturn(DiscoverDummy.getDiscover())
+        Mockito.`when`(discoverRepository.tvPopular()).thenReturn(DiscoverDummy.getDiscover())
         val trending = viewModel.trendingTvShow()
-        Mockito.verify(repository).tvPopular()
+        Mockito.verify(discoverRepository).tvPopular()
         Assert.assertNotNull(trending)
 
         viewModel.popularMovie.observeOnce {
@@ -55,11 +55,11 @@ class TvShowViewModelTest {
     @ExperimentalCoroutinesApi
     @Test
     fun addDiscover() = mainCoroutineRule.runBlockingTest {
-        Mockito.`when`(repository.topRateTvShow()).thenReturn(DiscoverDummy.getDiscover())
-        Mockito.`when`(repository.latestTvShow()).thenReturn(DiscoverDummy.getDiscover())
+        Mockito.`when`(discoverRepository.topRateTvShow()).thenReturn(DiscoverDummy.getDiscover())
+        Mockito.`when`(discoverRepository.latestTvShow()).thenReturn(DiscoverDummy.getDiscover())
         val discover = viewModel.addDiscover()
-        Mockito.verify(repository).topRateTvShow()
-        Mockito.verify(repository).latestTvShow()
+        Mockito.verify(discoverRepository).topRateTvShow()
+        Mockito.verify(discoverRepository).latestTvShow()
         Assert.assertNotNull(discover)
         viewModel.discover.observeOnce {
             assertEquals(true, it.isNotEmpty())
